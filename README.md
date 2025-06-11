@@ -15,3 +15,8 @@ users-service/
 │           └── server.go         ← настройка и запуск grpc.Server
 ├── go.mod
 └── go.sum
+
+<!-- для запуска -->
+```zsh
+    docker compose up --build
+```
