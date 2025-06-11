@@ -32,20 +32,24 @@ func (h *Handler) CreateUser(ctx context.Context, req *userpb.CreateUserRequest)
 	return &userpb.CreateUserResponse{User: &pbUser}, nil
 }
 
-func (h *Handler) GetUser(ctx context.Context, req *userpb.GetUserRequest) (*userpb.User, error) {
+func (h *Handler) GetUser(ctx context.Context, req *userpb.GetUserRequest) (*userpb.GetUserResponse, error) {
 	userId, err := uuid.Parse(req.Id)
 	if err != nil {
-		return &userpb.User{}, err
+		return &userpb.GetUserResponse{}, err
 	}
 
 	user, err := h.svc.GetUser(userId)
 	if err != nil {
-		return &userpb.User{}, err
+		return &userpb.GetUserResponse{}, err
 	}
 
-	return &userpb.User{
+	pbUser := &userpb.User{
 		Id:    user.Id.String(),
 		Email: user.Email,
+	}
+
+	return &userpb.GetUserResponse{
+		User: pbUser,
 	}, nil
 }
 
@@ -96,3 +100,6 @@ func (h *Handler) DeleteUser(ctx context.Context, req *userpb.DeleteUserRequest)
 	}
 	return &userpb.DeleteUserResponse{Id: req.Id}, nil
 }
+
+// go get github.com/IbadT/project-protos@latest
+// go mod tidy
