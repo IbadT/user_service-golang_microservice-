@@ -1,58 +1,151 @@
+version: "3.8"
+
 services:
   user_service:
-    build: .
+    build:
+      context: .
     container_name: user_microservice
     restart: always
     depends_on:
-      - db
+      - user_db
     networks:
-      - users-network
+      - microservices-network
     environment:
-      - DB_HOST=db
+      - DB_HOST=user_db
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_NAME=u_mic
     ports:
       - "50051:50051"
 
-  db:
+  user_db:
     image: postgres:15
-    container_name: db
+    container_name: user_db
     restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=u_mic
     ports:
-      - 5432:5432
+      - 5434:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - user_data:/var/lib/postgresql/data
     networks:
-      - users-network
+      - microservices-network
 
-  pgAdmin:
-    image: dpage/pgadmin4
-    container_name: oracle-notif-pgadmin
+  task_service:
+    build:
+      context: ../tasks-service
+    container_name: task_microservice
+    restart: always
+    depends_on:
+      - task_db
+      - user_service
+    networks:
+      - microservices-network
+    environment:
+      - DB_HOST=task_db
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=t_mic
+    ports:
+      - "50052:50052"
+
+  task_db:
+    image: postgres:15
+    container_name: task_db
     restart: always
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=t_mic
     ports:
-      - 5050:80
+      - 5433:5432
     volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    depends_on:
-      - db
+      - task_data:/var/lib/postgresql/data
     networks:
-      - users-network
-
+      - microservices-network
 
 networks:
-  users-network:
+  microservices-network:
     driver: bridge
 
 volumes:
-  postgres_data:
+  user_data:
     driver: local
-  pgadmin_data:
+  task_data:
     driver: local
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# services:
+#   user_service:
+#     build: .
+#     container_name: user_microservice
+#     restart: always
+#     depends_on:
+#       - db
+#     networks:
+#       - users-network
+#     environment:
+#       - DB_HOST=db
+#       - DB_USER=postgres
+#       - DB_PASSWORD=postgres
+#       - DB_NAME=u_mic
+#     ports:
+#       - "50051:50051"
+
+#   db:
+#     image: postgres:15
+#     container_name: db
+#     restart: always
+#     environment:
+#       - POSTGRES_USER=postgres
+#       - POSTGRES_PASSWORD=postgres
+#       - POSTGRES_DB=u_mic
+#     ports:
+#       - 5432:5432
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     networks:
+#       - users-network
+
+#   pgAdmin:
+#     image: dpage/pgadmin4
+#     container_name: oracle-notif-pgadmin
+#     restart: always
+#     environment:
+#       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+#       - PGADMIN_DEFAULT_PASSWORD=admin
+#     ports:
+#       - 5050:80
+#     volumes:
+#       - pgadmin_data:/var/lib/pgadmin
+#     depends_on:
+#       - db
+#     networks:
+#       - users-network
+
+
+# networks:
+#   users-network:
+#     driver: bridge
+
+# volumes:
+#   postgres_data:
+#     driver: local
+#   pgadmin_data:
+#     driver: local

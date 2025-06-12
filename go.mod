@@ -3,7 +3,7 @@ module github.com/IbadT/user_service-golang_microservice-.git
 go 1.24.3
 
 require (
-	github.com/IbadT/project-protos v0.0.0-20250611191446-04129484ab91
+	github.com/IbadT/project-protos v0.0.0-20250612141246-73c728fb2820
 	github.com/google/uuid v1.6.0
 )
 

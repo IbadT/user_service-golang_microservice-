@@ -11,6 +11,7 @@ import (
 
 type Handler struct {
 	svc user.Service
+	// taskClient taskpb
 	userpb.UnimplementedUserServiceServer
 }
 
@@ -31,6 +32,10 @@ func (h *Handler) CreateUser(ctx context.Context, req *userpb.CreateUserRequest)
 	}
 	return &userpb.CreateUserResponse{User: &pbUser}, nil
 }
+
+// func (h *Handler) GetUserWithTasks(ctx context.Context, req *userpb.GetUserWithTasksRequest) (*userpb.GetUserWithTasksResponse, error) {
+
+// }
 
 func (h *Handler) GetUser(ctx context.Context, req *userpb.GetUserRequest) (*userpb.GetUserResponse, error) {
 	userId, err := uuid.Parse(req.Id)

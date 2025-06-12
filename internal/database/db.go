@@ -11,7 +11,7 @@ import (
 var DB *gorm.DB
 
 func InitDB() (*gorm.DB, error) {
-	dsn := "host=db user=postgres password=postgres dbname=u_mic port=5432 sslmode=disable"
+	dsn := "host=user_db user=postgres password=postgres dbname=u_mic port=5432 sslmode=disable"
 
 	var err error
 
